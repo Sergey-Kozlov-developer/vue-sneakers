@@ -1,8 +1,11 @@
-<script setup></script>
+<script setup>
+import Header from "./components/Header.vue";
+</script>
 
 <template>
-	<div class="">
-		<h1>Sergei</h1>
+	<div class="bg-white w-4/5 m-auto h-screen rounded-xl shadow-xl mt-14">
+		<!-- <h1>Sergei</h1> -->
+		<Header />
 	</div>
 </template>
 
