@@ -66,7 +66,10 @@ const fetchItems = async () => {
 
 // функция для запроса с бэка
 // при первом рендере приложения! с помощью хука обращаемся к бэку
-onMounted(fetchItems);
+onMounted(async () => {
+	await fetchItems();
+	await fetchFavorites(); // получение списка закладок
+});
 // изменение сортировки по фильтру
 // watch - следит за изменениями sortBy
 watch(filters, fetchItems);
