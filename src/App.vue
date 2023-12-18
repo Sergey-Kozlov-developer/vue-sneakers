@@ -23,7 +23,20 @@ const onChangeSearchInput = (event) => {
 	filters.searchQuery = event.target.value;
 };
 
-// запрос на бэк
+//favorites наши закладки(избранное)
+const fetchFavorites = async () => {
+	try {
+		const { data } = await axios.get(
+			"https://280b3c98e5c903e5.mokky.dev/favorites"
+		);
+		// используя ref нужно всегда вытаскивать value
+		items.value = data;
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+// запрос на бэк, запрос списка товаров
 const fetchItems = async () => {
 	try {
 		// параметры сортировки и поиска
@@ -41,7 +54,11 @@ const fetchItems = async () => {
 			}
 		);
 		// используя ref нужно всегда вытаскивать value
-		items.value = data;
+		items.value = data.map((obj) => ({
+			...obj,
+			isFavorites: false,
+			isAdded: false,
+		}));
 	} catch (error) {
 		console.log(error);
 	}
