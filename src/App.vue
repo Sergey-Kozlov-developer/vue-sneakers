@@ -53,7 +53,32 @@ const fetchFavorites = async () => {
 
 // добавление в закладки
 const addToFavorite = async (item) => {
-	item.isFavorites = true;
+	try {
+		// если нет в закладках
+		if (!item.isFavorite) {
+			const obj = {
+				parentId: item.id,
+			};
+			item.isFavorite = true;
+			const { data } = await axios.post(
+				`https://280b3c98e5c903e5.mokky.dev/favorites`,
+				obj
+			);
+
+			//сохраняем по id
+			item.favoriteId = data.id;
+		} else {
+			item.isFavorite = false;
+			// если есть в закладках
+			await axios.delete(
+				`https://280b3c98e5c903e5.mokky.dev/favorites/${item.favoriteId}`
+			);
+
+			item.favoriteId = null;
+		}
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 // запрос на бэк, запрос списка товаров
@@ -77,6 +102,7 @@ const fetchItems = async () => {
 		items.value = data.map((obj) => ({
 			...obj,
 			isFavorites: false,
+			favoriteId: null,
 			isAdded: false,
 		}));
 	} catch (error) {
@@ -135,7 +161,7 @@ provide("addToFavorite", addToFavorite);
 				</div>
 			</div>
 			<div class="mt-10">
-				<CardList :items="items" />
+				<CardList :items="items" @addToFavorite="addToFavorite" />
 			</div>
 		</div>
 	</div>

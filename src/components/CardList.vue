@@ -1,11 +1,11 @@
 <script setup>
 import Card from "./Card.vue";
+
 defineProps({
 	items: Array,
 });
-const onClickAdd = () => {
-	alert("add");
-};
+// прокидываем функцию через emit
+const emit = defineEmits(["addToFavorite"]);
 </script>
 <template>
 	<div class="grid grid-cols-4 gap-5">
@@ -16,8 +16,9 @@ const onClickAdd = () => {
 			:title="item.title"
 			:imageUrl="item.imageUrl"
 			:price="item.price"
-			:onClickAdd="onClickAdd"
+			:onClickFavorite="() => emit('addToFavorite', item)"
 			:isFavorite="item.isFavorite"
+			:isAdded="item.isAdded"
 		/>
 	</div>
 </template>
