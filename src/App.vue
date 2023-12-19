@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, reactive } from "vue";
+import { onMounted, ref, watch, reactive, provide } from "vue";
 import axios from "axios";
 
 import Header from "./components/Header.vue";
@@ -23,17 +23,37 @@ const onChangeSearchInput = (event) => {
 	filters.searchQuery = event.target.value;
 };
 
-//favorites наши закладки(избранное)
+//favorites наши закладки(избранное).
+// получаем данные о закладках с бэка
 const fetchFavorites = async () => {
 	try {
-		const { data } = await axios.get(
-			"https://280b3c98e5c903e5.mokky.dev/favorites"
+		const { data: favorites } = await axios.get(
+			`https://280b3c98e5c903e5.mokky.dev/favorites`
 		);
-		// используя ref нужно всегда вытаскивать value
-		items.value = data;
+		// ниже проверяем есть ли items в закладках
+		items.value = items.value.map((item) => {
+			const favorite = favorites.find(
+				(favorite) => favorite.parentId === item.id
+			);
+			// если нет закладок - вернем item
+			if (!favorite) {
+				return item;
+			}
+			// если есть - вернем favorite с закладками
+			return {
+				...item,
+				isFavorites: true,
+				favoriteId: favorite.id,
+			};
+		});
 	} catch (error) {
 		console.log(error);
 	}
+};
+
+// добавление в закладки
+const addToFavorite = async (item) => {
+	item.isFavorites = true;
 };
 
 // запрос на бэк, запрос списка товаров
@@ -73,6 +93,9 @@ onMounted(async () => {
 // изменение сортировки по фильтру
 // watch - следит за изменениями sortBy
 watch(filters, fetchItems);
+
+// прокидывание данных между компонентами без props
+provide("addToFavorite", addToFavorite);
 </script>
 
 <template>

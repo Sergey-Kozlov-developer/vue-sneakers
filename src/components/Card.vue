@@ -1,13 +1,23 @@
 <script setup>
-defineProps({
+import { inject } from "vue";
+const props = defineProps({
+	id: Number,
 	imageUrl: String,
 	title: String,
 	price: Number,
 	isFavorite: Boolean,
 	isAdded: Boolean,
-	onClickAdd: Function,
+	// onClickAdd: Function,
 	onClickFavorite: Function,
 });
+// вытаскиваем addToFavorite из App.vue через inject по ключу 'addToFavorite'
+const addToFavorite = inject("addToFavorite");
+const onClickFavorite = () => {
+	const obj = {
+		parentId: props.id,
+	};
+	addToFavorite(obj);
+};
 </script>
 
 <template>
