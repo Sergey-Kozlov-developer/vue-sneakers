@@ -1,5 +1,4 @@
 <script setup>
-import { inject } from "vue";
 defineProps({
 	id: Number,
 	imageUrl: String,
@@ -17,6 +16,7 @@ defineProps({
 		class="relative bg-white border border-slate-200 rounded-3xl p-8 cursor-pointer transition hover:-translate-y-2 hover:shadow-xl"
 	>
 		<img
+			v-if="onClickFavorite"
 			@click="onClickFavorite"
 			:src="!isFavorite ? '/like-1.svg' : '/like-2.svg'"
 			alt="Like"
@@ -30,6 +30,7 @@ defineProps({
 				<b>{{ price }}.</b>
 			</div>
 			<img
+				v-if="onClickAdd"
 				@click="onClickAdd"
 				:src="!isAdded ? '/plus.svg' : '/checked.svg'"
 				alt="Plus"
