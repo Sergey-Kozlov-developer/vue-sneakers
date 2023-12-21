@@ -5,10 +5,10 @@ defineProps({
 	items: Array,
 });
 // прокидываем функцию через emit
-const emit = defineEmits(["addToFavorite"]);
+const emit = defineEmits(["addToFavorite", "addToCart"]);
 </script>
 <template>
-	<div class="grid grid-cols-4 gap-5">
+	<div class="grid grid-cols-4 gap-5" v-auto-animate>
 		<Card
 			v-for="item in items"
 			:key="item.id"
@@ -17,6 +17,7 @@ const emit = defineEmits(["addToFavorite"]);
 			:imageUrl="item.imageUrl"
 			:price="item.price"
 			:onClickFavorite="() => emit('addToFavorite', item)"
+			:onClickAdd="() => emit('addToCart', item)"
 			:isFavorite="item.isFavorite"
 			:isAdded="item.isAdded"
 		/>
